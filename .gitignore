@@ -1,0 +1,15 @@
+# Python cache and virtual env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+.venv/
+venv/
+
+# Keep datasets local (large binaries should not be committed)
+data/raw/
+
+# Keep training artifacts local
+outputs/*
+!outputs/.gitkeep

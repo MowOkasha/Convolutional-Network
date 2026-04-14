@@ -1,0 +1,31 @@
+# Main experiment config.
+# Start with this file, then only tweak values below.
+
+dataset:
+  # Use "cifar10" for fastest built-in demo,
+  # or "imagefolder" for your own train/val(/test) folders.
+  name: imagefolder
+  root: data/raw
+  train_dir: train
+  val_dir: val
+  test_dir: test
+
+model:
+  # If timm is installed, many names are supported (resnet18, efficientnet_b0, ...).
+  # If timm misses or name is unknown, code falls back to a few torchvision models.
+  name: resnet18
+  pretrained: true
+  image_size: 224
+
+training:
+  epochs: 10
+  batch_size: 32
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  num_workers: 2
+  seed: 42
+  # auto = choose cuda/mps/cpu automatically.
+  device: auto
+
+paths:
+  output_dir: outputs
