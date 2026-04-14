@@ -1,4 +1,4 @@
-# Deep Learning in Computer Vision - Assignment Skeleton
+# Deep Learning in Computer Vision 
 
 This repository is a fast-start template for a computer vision assignment when time is limited.
 It is designed for image classification first, with clean separation so you can extend it to
