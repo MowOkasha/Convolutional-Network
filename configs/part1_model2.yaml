@@ -1,0 +1,28 @@
+data:
+  root_dir: data/raw
+  classes: [angry, happy, sad, surprise]
+  # Data is prepared at 512x512x3 per assignment requirement.
+  # For faster experiments, train with a lower resized input here.
+  image_size: 256
+  max_train_per_class: 300
+  max_val_per_class: 120
+  max_test_per_class: 120
+
+model:
+  # The PDF line 1 says 3 conv layers, but line 2 gives 5 successive conv sizes/filters.
+  # This config follows the explicit 5-size list: 3,3,3,5,7 with channels 32,64,64,32,16.
+  kernel_sizes: [3, 3, 3, 5, 7]
+  channels: [32, 64, 64, 32, 16]
+  hidden_units: 128
+
+training:
+  epochs: 3
+  batch_size: 16
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  num_workers: 2
+  seed: 42
+  device: auto
+
+output:
+  dir: outputs/part1/model2

@@ -1,0 +1,24 @@
+data:
+  root_dir: data/raw
+  classes: [angry, happy, sad, surprise]
+
+model:
+  # Use relu by default; switch if your PDF formula differs.
+  activation: relu
+  pooling_type: max
+  feature_dim: 128
+
+kmeans:
+  max_iter: 100
+  tol: 1.0e-4
+
+runtime:
+  seed: 42
+  # Model 1 is computationally expensive from scratch on 512x512.
+  # Keep these values moderate for practical execution time.
+  max_train_per_class: 50
+  max_val_per_class: 20
+  max_test_per_class: 20
+
+output:
+  dir: outputs/part1/model1

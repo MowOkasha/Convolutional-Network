@@ -1,0 +1,27 @@
+dataset:
+  # FER2013 benchmark via Hugging Face datasets hub.
+  source: huggingface_fer2013
+  hf_dataset_id: abhilash88/fer2013-enhanced
+  cache_dir: data/external/hf
+
+  # Choosing 4 classes as required by the assignment.
+  # FER2013 label mapping:
+  # 0=angry, 1=disgust, 2=fear, 3=happy, 4=sad, 5=surprise, 6=neutral
+  selected_labels: ["0", "3", "4", "5"]
+
+output:
+  root_dir: data/raw
+  image_size: 512
+
+split:
+  train_ratio: 0.7
+  val_ratio: 0.2
+  test_ratio: 0.1
+
+preprocessing:
+  remove_exact_duplicates: true
+
+runtime:
+  seed: 42
+  # Practical default for assignment runtime. Set to null to use all available images.
+  max_images_per_class: 1500

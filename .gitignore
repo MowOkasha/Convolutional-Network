@@ -9,6 +9,7 @@ venv/
 
 # Keep datasets local (large binaries should not be committed)
 data/raw/
+data/external/
 
 # Keep training artifacts local
 outputs/*

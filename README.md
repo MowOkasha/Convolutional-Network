@@ -1,108 +1,92 @@
-# Deep Learning in Computer Vision 
+# Deep Learning for Computer Vision - Assignment (Part 1)
 
-This repository is a fast-start template for a computer vision assignment when time is limited.
-It is designed for image classification first, with clean separation so you can extend it to
-detection or segmentation later if needed.
+This repository now implements only Part 1 of the assignment PDF.
+Part 2 and Part 3 are intentionally not implemented yet.
 
-## 1) Where To Get Datasets
+## 1) What Is Implemented
 
-Use `docs/dataset_sources.md` for direct links and download notes.
+Part 1 Data Preparation:
+- Uses a benchmark emotion dataset (FER2013 from Hugging Face).
+- Selects 4 emotion classes.
+- Removes redundant exact-duplicate images.
+- Resizes to 512x512x3.
+- Splits into train/val/test at 70/20/10.
 
-If your assignment does not force a specific dataset, use one of these:
+Part 1 Model 1 (from scratch):
+- Convolution and pooling implemented with NumPy only.
+- Uses predefined 3x3x3 filters.
+- Builds a 3-block convolution pipeline.
+- Flattens and downsamples feature vector to 1x128.
+- Uses K-means clustering (implemented from scratch with NumPy).
 
-- Fastest start (built in): CIFAR-10 via torchvision
-- Better visual report quality: Intel Image Classification (Kaggle)
-- Cleaner classes and good visuals: Oxford 102 Flowers
+Part 1 Model 2 (library CNN):
+- Uses PyTorch.
+- Valid convolutions only.
+- Convolution blocks follow the PDF constraints.
+- One hidden fully connected layer with Sigmoid.
+- Output layer uses Softmax.
 
-## 2) Quick Start
+## 2) Quick Start (Part 1 Only)
 
 1. Create and activate a virtual environment.
 2. Install dependencies:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-3. Choose dataset mode in `configs/classification_baseline.yaml`.
+3. Prepare data (FER2013 -> four classes -> 512x512x3 -> 70/20/10 split):
 
-   - For built-in quick start, set `dataset.name: cifar10`.
-   - For your own folders, set `dataset.name: imagefolder` and arrange your files like this:
+```bash
+python -m src.part1.data_prep --config configs/part1_data_prep.yaml
+```
 
-   ```text
-   data/raw/
-     train/
-       class_1/*.jpg
-       class_2/*.jpg
-     val/
-       class_1/*.jpg
-       class_2/*.jpg
-     test/                # optional but recommended
-       class_1/*.jpg
-       class_2/*.jpg
-   ```
+4. Run Model 1 (scratch conv + k-means):
 
-4. Train:
+```bash
+python -m src.part1.model1_scratch --config configs/part1_model1.yaml
+```
 
-   ```bash
-   python -m src.train --config configs/classification_baseline.yaml
-   ```
+5. Train Model 2 (PyTorch CNN):
 
-5. Evaluate:
+```bash
+python -m src.part1.train_model2 --config configs/part1_model2.yaml
+```
 
-   ```bash
-   python -m src.evaluate --config configs/classification_baseline.yaml --checkpoint outputs/checkpoints/best.pt
-   ```
+By default, `configs/part1_model2.yaml` uses a lower training image size for practical runtime.
+If you need strict end-to-end 512 input training, change `data.image_size` to `512`.
 
-6. Predict one image:
+## 3) Important Note About The PDF Activation Formula
 
-   ```bash
-   python -m src.infer --config configs/classification_baseline.yaml --checkpoint outputs/checkpoints/best.pt --image /absolute/path/to/image.jpg
-   ```
+The line in the provided PDF where Model 1 activation is "defined as" contains a formula
+that is not machine-extractable in plain text. This implementation uses ReLU as the default
+simple activation and allows easy switching in config if needed.
 
-## 3) File Structure
+## 4) File Structure (Part 1 Additions)
 
 ```text
 Assignment/
   configs/
-    classification_baseline.yaml   # Main knobs: dataset, model, training
-  data/
-    README.md                      # Expected dataset structure
-    .gitkeep
+    part1_data_prep.yaml          # Dataset source + split + resize rules
+    part1_model1.yaml             # Model 1 scratch settings
+    part1_model2.yaml             # Model 2 training settings
   docs/
-    dataset_sources.md             # Dataset links for classification/detection/segmentation
-  outputs/
-    .gitkeep
+    part1_requirements_map.md     # Requirement-to-implementation mapping from PDF
   src/
-    config.py                      # Strongly-typed config loader + device selection
-    train.py                       # Main training entrypoint
-    evaluate.py                    # Checkpoint evaluation script
-    infer.py                       # Single-image inference script
-    data/
-      transforms.py                # Train/eval transforms
-      build.py                     # Dataloaders for ImageFolder or CIFAR-10
-    models/
-      factory.py                   # Model construction (timm first, torchvision fallback)
-    engine/
-      train_loop.py                # One-epoch train loop
-      eval_loop.py                 # Validation/test loop + predictions
-    utils/
-      io.py                        # JSON and directory helpers
-      seeding.py                   # Reproducibility seed helper
-  .gitignore
-  requirements.txt
-  README.md
+    part1/
+      data_prep.py                # FER2013 preparation and folder export
+      model1_scratch.py           # Scratch conv/pool/activation + k-means
+      model2_cnn.py               # CNN architecture for Model 2
+      train_model2.py             # Training script for Model 2
 ```
 
-## 4) What To Edit First
+## 5) Expected Outputs
 
-- `configs/classification_baseline.yaml`
-- `docs/dataset_sources.md` (pick one dataset path)
-- If custom dataset, place images under `data/raw/...` as shown in `data/README.md`
+Model 1 outputs:
+- outputs/part1/model1/metrics.json
+- outputs/part1/model1/predictions_test.csv
 
-## 5) Submission-Focused Output Checklist
-
-- Best checkpoint in `outputs/checkpoints/best.pt`
-- Training history in `outputs/history.csv`
-- Evaluation metrics from `src.evaluate`
-- Prediction examples from `src.infer`
-- Report figures: training/validation accuracy, confusion matrix, and error analysis
+Model 2 outputs:
+- outputs/part1/model2/checkpoints/best.pt
+- outputs/part1/model2/history.csv
+- outputs/part1/model2/metrics.json
